@@ -1,32 +1,36 @@
-var builder = WebApplication.CreateBuilder(args);
+using Commons.Extensions;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
-// Add services to the container.
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-
-var summaries = new[]
+namespace CSharpHttpClientExample
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    public static class Program
+    {
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-       new WeatherForecast
-       (
-           DateTime.Now.AddDays(index),
-           Random.Shared.Next(-20, 55),
-           summaries[Random.Shared.Next(summaries.Length)]
-       ))
-        .ToArray();
-    return forecast;
-});
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration(configuration =>
+            {
+                string applicationLevel = Environment.GetEnvironmentVariable("ApplicationLevel");
+                char seperator = System.IO.Path.AltDirectorySeparatorChar;
 
-app.Run();
+                configuration.AddJsonFile($"Properties{seperator}{applicationLevel}{seperator}appsettings.json", false, true);
 
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+            })
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.ConfigureKestrel(options =>
+                {
+                    int portRest = Environment.GetEnvironmentVariable("PortRest").ToInteger();
+                    options.ListenAnyIP(portRest, listenOptions =>
+                    {
+                        listenOptions.Protocols = HttpProtocols.Http1;
+                    });
+                });
+                webBuilder.UseStartup<Startup>();
+            });
+    }
 }

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "kde7dkVpkYGB84bxUM7gGZdTXFlVUVB7NMAzwA6aOfU=",
+  "Source": "CSharpHttpClientExample",
+  "BasePath": "_content/CSharpHttpClientExample",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
