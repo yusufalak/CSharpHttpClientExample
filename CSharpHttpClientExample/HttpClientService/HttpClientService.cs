@@ -1,4 +1,5 @@
 ﻿using Commons.Exceptions;
+using Commons.ExceptionService;
 using Commons.HttpClientService.Models;
 using Commons.Log;
 using System.IO.Compression;
@@ -16,9 +17,11 @@ namespace Commons.HttpClientService
         private static readonly string CONTENT_ENCODING = "content-encoding";
 
         protected readonly HttpClient _httpClient;
+        protected readonly IExceptionService _exceptionService;
 
-        public HttpClientService(IHttpClientFactory _httpClientfactory, bool blocking)
+        public HttpClientService(IExceptionService exceptionService, IHttpClientFactory _httpClientfactory, bool blocking)
         {
+            this._exceptionService = exceptionService;
             if (blocking)
             {
                 this._httpClient = _httpClientfactory.CreateClient("blocking");
@@ -31,21 +34,33 @@ namespace Commons.HttpClientService
 
         public virtual HttpResponseModel Execute(HttpRequestModel httpRequest)
         {
-            Task<HttpResponseModel> internalResponse = ExecuteInternal(httpRequest);
-            HttpResponseModel responseBody = internalResponse.Result;
-            LoggingUtil.LogRequestResponseInfo(LOG, httpRequest, responseBody.Response);
-            return responseBody;
+            try
+            {
+                Task<HttpResponseModel> internalResponse = ExecuteInternal(httpRequest);
+                HttpResponseModel responseBody = internalResponse.Result;
+                LoggingUtil.LogRequestResponseInfo(LOG, httpRequest, responseBody.Response);
+                return responseBody;
+            }
+            catch (Exception exception)
+            {
+                LoggingUtil.LogRequestResponseError(LOG, httpRequest, exception.Message, exception);
+                throw _exceptionService.HandleFinalException(exception);
+            }
+
+
         }
 
         private async Task<HttpResponseModel> ExecuteInternal(HttpRequestModel httpRequest)
         {
-            bool retryOnError = httpRequest.RetryOnError.Value;
-            int retryCount = httpRequest.RetryCount.Value;
+            if (httpRequest == null)
+                throw _exceptionService.CreateException(ErrorCodes.MISSING_MANDATORY_FIELD, "HttpRequestModel");
+
+            bool retryOnError = httpRequest.RetryOnError != null ? httpRequest.RetryOnError.Value : false;
+            int retryCount = httpRequest.RetryCount != null ? httpRequest.RetryCount.Value : 0;
 
             HttpRequestMessage httpRequestMessage = CreateHttpRequestModel(httpRequest);
 
             int count = 0;
-            Exception exception = null;
             do
             {
                 count++;
@@ -54,29 +69,14 @@ namespace Commons.HttpClientService
                     HttpResponseMessage httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage);
                     return await CreateHttpResponseModel(httpResponseMessage);
                 }
-                catch (HttpRequestException ex)
+                catch (HttpRequestException)
                 {
                     if (!retryOnError || retryCount > count) { throw; }
-                    else { exception = ex; }
-                }
-                catch (Exception ex)
-                {
-                    if (!retryOnError || retryCount > count) { throw; }
-                    else { exception = ex; }
-                }
-                finally
-                {
-                    if (exception != null)
-                    {
-                        LoggingUtil.LogRequestResponseError(LOG, httpRequest, exception.Message, exception);
-                    }
                 }
 
             } while (retryOnError && retryCount < count);
 
             string errorMessage = "Unable to parse service response!";
-            if (exception != null) errorMessage = exception.Message;
-
             throw new SubChannelException(ErrorCodes.URL_CONNECTION_ERROR, errorMessage);
         }
 

@@ -1,4 +1,5 @@
 using Commons.Components;
+using Commons.ExceptionService;
 using Commons.Extensions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Text.Json.Serialization;
@@ -34,6 +35,8 @@ namespace CSharpHttpClientExample
             services.AddHttpClient(Configuration);
 
             services.AddSingleton(factory => log4net.LogManager.GetLogger(GetType()));
+
+            services.TryAddSingleton<IExceptionService, ExceptionService>();
 
         }
 
