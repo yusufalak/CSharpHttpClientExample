@@ -8,7 +8,7 @@
         {
             return new HttpRequestModel
             {
-                Method = HttpMethod.Post
+                Method = "Post"
             };
         }
 
@@ -16,7 +16,7 @@
         {
             return new HttpRequestModel
             {
-                Method = HttpMethod.Get
+                Method = "Get"
             };
         }
 

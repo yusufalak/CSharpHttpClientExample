@@ -36,6 +36,9 @@ namespace Commons.HttpClientService
         {
             try
             {
+                if (httpRequest == null)
+                    throw _exceptionService.CreateException(ErrorCodes.MISSING_MANDATORY_FIELD, "HttpRequestModel");
+
                 Task<HttpResponseModel> internalResponse = ExecuteInternal(httpRequest);
                 HttpResponseModel responseBody = internalResponse.Result;
                 LoggingUtil.LogRequestResponseInfo(LOG, httpRequest, responseBody.Response);
@@ -134,8 +137,10 @@ namespace Commons.HttpClientService
 
             AddQueryParams(httpRequest.RequestParameters, builder);
 
+            HttpMethod httpMethod = FindHttpMethod(httpRequest.Method);
+
             var url = builder.ToString();
-            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpRequest.Method, url);
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(httpMethod, url);
 
             if (httpRequest.UseGzip.Value)
             {
@@ -159,7 +164,7 @@ namespace Commons.HttpClientService
 
             httpRequestMessage.Headers.Add("Accept", httpRequest.ContentType);
 
-            if (httpRequest.Method != HttpMethod.Get)
+            if (httpMethod != HttpMethod.Get)
             {
                 if (httpRequest.FormData != null && httpRequest.FormData.Count > 0)
                 {
@@ -174,6 +179,38 @@ namespace Commons.HttpClientService
             }
 
             return httpRequestMessage;
+        }
+
+        private HttpMethod FindHttpMethod(string? method)
+        {
+            if (string.IsNullOrEmpty(method))
+                throw new SubChannelException(ErrorCodes.MISSING_MANDATORY_FIELD, "HttpMethod");
+
+            method = method.ToLower().Trim();
+
+            if ("get".Equals(method))
+                return HttpMethod.Get;
+
+            if ("post".Equals(method))
+                return HttpMethod.Post;
+
+            if ("delete".Equals(method))
+                return HttpMethod.Delete;
+
+            if ("head".Equals(method))
+                return HttpMethod.Head;
+
+            if ("options".Equals(method))
+                return HttpMethod.Options;
+
+            if ("patch".Equals(method))
+                return HttpMethod.Patch;
+
+            if ("put".Equals(method))
+                return HttpMethod.Put;
+
+            return HttpMethod.Trace;
+
         }
 
         private Encoding FindEncoding(string charset)

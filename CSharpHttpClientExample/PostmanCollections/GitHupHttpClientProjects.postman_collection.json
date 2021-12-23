@@ -27,7 +27,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"URL\": \"https://api.service.com\",\r\n    \"Method\": {\r\n        \"Method\": \"POST\"\r\n    },\r\n    \"ContentType\": \"text/xml\",\r\n    \"Charset\": \"UTF8\",\r\n    \"Headers\": [\r\n        {\r\n            \"Name\": \"header1Key\",\r\n            \"Value\": \"header1Value\"\r\n        }\r\n    ],\r\n    \"RequestParameters\": {\r\n        \"requestParam1Key\": \"requestParam1Value\"\r\n    },\r\n    \"FormData\": {\r\n        \"formData1Key\": \"formData1Value\"\r\n    },\r\n    \"AuthorizationToken\": \"Basic mZXJJZHEAfgABTAAIc2VhcmNoSWRxAH4AAXhwAAAAAXQ\",\r\n    \"SoapAction\": \"defaultSoapAction\",\r\n    \"RequestBody\": \"Example request body rest or xml\",\r\n    \"ServiceName\": \"ExampleService\",\r\n    \"RetryOnError\": true,\r\n    \"UseGzip\": true,\r\n    \"GetBodyElement\": false,\r\n    \"RetryCount\": 5\r\n}",
+					"raw": "{\r\n    \"URL\": \"https://api.service.com\",\r\n    \"Method\": \"POST\",\r\n    \"ContentType\": \"text/xml\",\r\n    \"Charset\": \"UTF8\",\r\n    \"Headers\": [\r\n        {\r\n            \"Name\": \"header1Key\",\r\n            \"Value\": \"header1Value\"\r\n        }\r\n    ],\r\n    \"RequestParameters\": {\r\n        \"requestParam1Key\": \"requestParam1Value\"\r\n    },\r\n    \"FormData\": {\r\n        \"formData1Key\": \"formData1Value\"\r\n    },\r\n    \"AuthorizationToken\": \"Basic mZXJJZHEAfgABTAAIc2VhcmNoSWRxAH4AAXhwAAAAAXQ\",\r\n    \"SoapAction\": \"defaultSoapAction\",\r\n    \"RequestBody\": \"Example request body rest or xml\",\r\n    \"ServiceName\": \"ExampleService\",\r\n    \"RetryOnError\": true,\r\n    \"UseGzip\": true,\r\n    \"GetBodyElement\": false,\r\n    \"RetryCount\": 5\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -70,7 +70,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"URL\": \"https://randomuser.me/api\",\r\n    \"Method\": {\r\n        \"Method\": \"GET\"\r\n    },\r\n    \"ContentType\": \"application/json\",\r\n    \"Charset\": \"UTF8\",\r\n    \"RetryOnError\": true,\r\n    \"UseGzip\": false,\r\n    \"RetryCount\": 5\r\n}",
+					"raw": "{\r\n    \"URL\": \"https://randomuser.me/api\",\r\n    \"Method\": \"GET\",\r\n    \"ContentType\": \"application/json\",\r\n    \"Charset\": \"UTF8\",\r\n    \"RetryOnError\": true,\r\n    \"UseGzip\": false,\r\n    \"RetryCount\": 5\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -113,7 +113,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"URL\": \"https://randomuser.me/api\",\r\n    \"Method\": {\r\n        \"Method\": \"GET\"\r\n    },\r\n    \"ContentType\": \"application/json\",\r\n    \"Charset\": \"UTF8\",\r\n    \"RetryOnError\": true,\r\n    \"UseGzip\": false,\r\n    \"RetryCount\": 5\r\n}",
+					"raw": "{\r\n    \"URL\": \"https://randomuser.me/api\",\r\n    \"Method\": \"GET\",\r\n    \"ContentType\": \"application/json\",\r\n    \"Charset\": \"UTF8\",\r\n    \"RetryOnError\": true,\r\n    \"UseGzip\": false,\r\n    \"RetryCount\": 5\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

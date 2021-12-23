@@ -5,7 +5,7 @@
     {
         public string? URL { get; set; } = null;
 
-        public HttpMethod? Method { get; set; } = null;
+        public string? Method { get; set; } = null;
 
         public string? ContentType { get; set; } = null;
 

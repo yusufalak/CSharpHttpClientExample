@@ -5,6 +5,12 @@
     {
         public string Name { get; set; }
         public string Value { get; set; }
+
+        public HttpHeaderModel()
+        {
+
+        }
+
         public HttpHeaderModel(string name, string value)
         {
             Name = name;
